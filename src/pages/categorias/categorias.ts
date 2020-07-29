@@ -1,4 +1,4 @@
-import { CategoriaService } from './../../services/categoria.service';
+import { CategoriaService } from '../../services/domain/categoria.service';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { CategoriaDTO } from '../../models/categoria.dto';
