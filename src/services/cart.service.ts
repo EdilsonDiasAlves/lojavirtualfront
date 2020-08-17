@@ -32,4 +32,45 @@ export class CartService {
     this.localStorage.setCart(cart);
     return cart;
   }
+
+  removeProduto(prod: ProdutoDTO): Cart {
+    let cart = this.getCart();
+    let position = cart.itens.findIndex(c => c.produto.id == prod.id);
+    if(position != -1) {
+      cart.itens.splice(position, 1);
+    }
+    this.localStorage.setCart(cart);
+    return cart;
+  }
+
+  increaseQuantity(prod: ProdutoDTO): Cart {
+    let cart = this.getCart();
+    let position = cart.itens.findIndex(c => c.produto.id == prod.id);
+    if(position != -1) {
+      cart.itens[position].quantidade++;
+    }
+    this.localStorage.setCart(cart);
+    return cart;
+  }
+
+  decreaseQuantity(prod: ProdutoDTO): Cart {
+    let cart = this.getCart();
+    let position = cart.itens.findIndex(c => c.produto.id == prod.id);
+    if(position != -1) {
+      cart.itens[position].quantidade--;
+      if(cart.itens[position].quantidade < 1) {
+        cart = this.removeProduto(prod);
+      }
+    }
+    this.localStorage.setCart(cart);
+    return cart;
+  }
+
+  total(): number {
+    let cart = this.getCart();
+    let sum: number = 0;
+    cart.itens.forEach(c => sum += c.produto.preco * c.quantidade);
+    return sum;
+  }
+
 }
