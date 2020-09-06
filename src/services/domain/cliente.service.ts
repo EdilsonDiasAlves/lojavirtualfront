@@ -1,3 +1,4 @@
+import { ImageUtilService } from './../image-util.service';
 import { StorageService } from './../storage.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from "@angular/core";
@@ -8,7 +9,9 @@ import { ClienteDTO } from '../../models/cliente.dto';
 @Injectable()
 export class ClienteService {
 
-  constructor(public http: HttpClient, public localStorage: StorageService) {
+  constructor(public http: HttpClient,
+    public localStorage: StorageService,
+    public imageUtilService: ImageUtilService) {
   }
 
   findByEmail(email: string) {
@@ -28,6 +31,21 @@ export class ClienteService {
     return this.http.post(
       `${API_CONFIG.baseUrl}/clientes`,
       obj,
+      {
+        observe: 'response',
+        responseType: 'text'
+      }
+    )
+  }
+
+  uploadPicture(base64Picture) {
+    let pictureBlob = this.imageUtilService.dataUriToBlob(base64Picture);
+    let formData: FormData = new FormData();
+    formData.set('file', pictureBlob, 'file.png');
+
+    return this.http.post(
+      `${API_CONFIG.baseUrl}/clientes/picture`,
+      formData,
       {
         observe: 'response',
         responseType: 'text'
